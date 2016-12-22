@@ -11,16 +11,9 @@ public abstract class Pdu {
     protected byte[] bytes;
     protected ByteSequenceBuilder sequenceBuilder;
 
-    public Pdu(){
+    public Pdu(){}
 
-    }
-
-    public Pdu (InputStream inputStream){
-
-    }
-
-
-
+    public Pdu (InputStream inputStream){}
     public byte[] getBytes() {
         return bytes;
     }

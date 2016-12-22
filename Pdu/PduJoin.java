@@ -6,9 +6,17 @@ import java.io.UnsupportedEncodingException;
  */
 public class PduJoin extends Pdu{
 
+
+
+
     private final byte op = 12;
 
-    public PduJoin(String identity) throws UnsupportedEncodingException {
+    public PduJoin(String Identity) throws UnsupportedEncodingException {
 
+        sequenceBuilder = new ByteSequenceBuilder(op);
+        sequenceBuilder.append((byte)Identity.getBytes("UTF-8").length).pad();
+        sequenceBuilder.append(Identity.getBytes("UTF-8")).pad();
+
+        bytes= sequenceBuilder.toByteArray();
     }
 }

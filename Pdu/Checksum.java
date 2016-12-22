@@ -50,7 +50,7 @@ public class Checksum {
 
         for (int i = 0; i < buf.length; i++) {
 
-            sum += buf[i];
+            sum = buf[i] + (0xff & i);///add this (0xff & b) in checksum somewhere???
 
             if(sum > 255){
                 sum = sum - 255;

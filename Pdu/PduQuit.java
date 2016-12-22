@@ -6,6 +6,11 @@ public class PduQuit extends Pdu {
 
     private final byte op = 11;
 
+
+    //Not done!
     public PduQuit(){
+        sequenceBuilder = new ByteSequenceBuilder(op);
+        sequenceBuilder.pad();
+        bytes= sequenceBuilder.toByteArray();
      }
 }

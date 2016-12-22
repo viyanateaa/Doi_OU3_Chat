@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by kristoffer & Viyan on 2016-09-28.
  */
-//// TODO: 2016-10-11 test the class, time converting
+//// Not Done!
 public class PduMess extends Pdu {
 
     private final byte op = 10;
@@ -105,7 +105,7 @@ public class PduMess extends Pdu {
         //fixa for client samma som förre!
 
 
-
+//nothing
 
 
 
