@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 public class PduSlist extends Pdu {
 ///
     //int nrOfServers;
-    /////some
+    /////somework!
 
     public PduSlist(byte [] in){
 
