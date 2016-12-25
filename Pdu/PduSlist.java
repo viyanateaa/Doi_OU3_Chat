@@ -3,12 +3,37 @@
  */
 package Pdu;
 
-//// TODO: 2016-10-11 implement the class and testing
+import java.nio.ByteBuffer;
+
+//// Not Done!!
 public class PduSlist extends Pdu {
+///
+    //int nrOfServers;
+    /////somework!
 
-    short nrOfServers;
+    public PduSlist(byte [] in){
 
-    public PduSlist(byte[] byteArray){
+
+       byte [] nrOfServers= new byte [2];
+
+
+        for (int i=2; i<4; i++){
+            nrOfServers[i-2] = in[i];
+        }
+        ByteBuffer.wrap(nrOfServers);
+
+
+        byte [] adress= new byte [4];
+
+
+
+        //sequenceBuilder.append((byte)0);
+        //bytes= sequenceBuilder.toByteArray();
+
+        //sequenceBuilder.appendShort(nrOfServers);
+
+
+
 
     }
 
