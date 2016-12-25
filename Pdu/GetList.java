@@ -18,7 +18,7 @@ public class GetList extends Pdu {
     }
 
     /**
-     * Implements the printInfo method.
+     * Implements the abstract printInfo method.
      */
     public void printInfo(){
         System.out.println("This is a GetList PDU with OP:3");
