@@ -1,34 +1,59 @@
 package Pdu;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
-
-//// Not Done!
 public class PduPjoin extends Pdu{
 
-    private final byte op =16;
-    private String Identity;
-    private long unixTime;
-    InputStream in;
-
-    public PduPjoin(InputStream inputStream) throws UnsupportedEncodingException {
-
-        sequenceBuilder = new ByteSequenceBuilder(op);
-
-        in = inputStream;
+    private String clientIdentity;
+    private Date timeStamp;
 
 
-        sequenceBuilder.append((byte)Identity.getBytes("UTF-8").length).pad();
-        sequenceBuilder.append(Identity.getBytes("UTF-8")).pad();
-        sequenceBuilder.append((byte)timeStamp.getBytes("UTF-8").length);
-        sequenceBuilder.append((byte)clientIdentity.getBytes("UTF-8").length);
+    public PduPjoin(InputStream inputStream) throws IOException {
 
+        byte identityLenght = (byte)inputStream.read();
 
+        //checks the padding of the pdu
+        for(int i= 0;i < 2;i++) {
+            if (inputStream.read() != (byte)0) {
+                throw new IllegalArgumentException("the format of " +
+                        "the PDU is wrong.");
+            }
+        }
 
-        //bytes= sequenceBuilder.toByteArray();
+        //gets the timestamp
+        byte[] timeArray = new byte[4];
+        for(int j = 0;j < 4;j++){
+            timeArray[j] = (byte)inputStream.read();
+        }
+        long unixTime = ByteBuffer.wrap(timeArray).getInt();
+        timeStamp = new Date(unixTime);
 
+        //gets the client ID
+        byte[] clientId = new byte[identityLenght];
+        for(int k = 0;k < identityLenght;k++){
+            clientId[k] = (byte)inputStream.read();
+        }
+        clientIdentity = new String(clientId, StandardCharsets.UTF_8);
 
+        //takes padding into account.
+        if(identityLenght%4 != 0){
+            for(int i = 0;i < (4 - (identityLenght%4));i++){
+                if(inputStream.read() != 0){
+                    throw new IllegalArgumentException("The format " +
+                            "of the PDU is wrong.");
+                }
+            }
+        }
 
+    }
+
+    public void printInfo(){
+        System.out.println(timeStamp);
+        System.out.println(clientIdentity + " has joined the chat.");
     }
 }

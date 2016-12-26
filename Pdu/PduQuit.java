@@ -7,10 +7,18 @@ public class PduQuit extends Pdu {
     private final byte op = 11;
 
 
-    //Not done!
+    //// TODO: 2016-12-25 create constructor for receiving quit_pdu
+    //// TODO: quit message to be printed for user
     public PduQuit(){
-        sequenceBuilder = new ByteSequenceBuilder(op);
-        sequenceBuilder.pad();
-        bytes= sequenceBuilder.toByteArray();
+        sequenceBuilder = new ByteSequenceBuilder(op).pad();
+        bytes = sequenceBuilder.toByteArray();
      }
+
+    /**
+     * Implements the abstract printInfo method. Prints info for
+     * the user.
+     */
+    public void printInfo(){
+        System.out.println("Quit message to be printed to screen");
+    }
 }

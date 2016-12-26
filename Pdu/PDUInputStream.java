@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 
-///Not Done!
-
 public class PDUInputStream {
 
-    Scanner pduScanner;
+    private InputStream inputStream;
+    private int opByte;
+    private Pdu incomingPdu;
 
     public PDUInputStream(InputStream inputStream) {
-        pduScanner = new Scanner(inputStream);
+        this.inputStream = inputStream;
+        this.incomingPdu = null;
     }
 
     /**
@@ -21,9 +22,32 @@ public class PDUInputStream {
      * @throws java.io.EOFException If the stream closed without an error.
      * @throws java.io.IOException If the stream closed with an error.
      */
-    //// TODO: 2016-10-11 much more...
     public Pdu readPdu() throws EOFException, IOException {
 
-        return null;
+        opByte = inputStream.read();
+
+        switch (opByte){
+            case 4:
+                //Slist
+                break;
+            case 10:
+                //mess
+                break;
+            case 11:
+                //quit
+                break;
+            case 16:
+                incomingPdu = new PduPjoin(inputStream);
+                break;
+            case 17:
+                incomingPdu = new PduPleave(inputStream);
+                break;
+            case 19:
+                incomingPdu = new PduParticipants(inputStream);
+                break;
+            default:
+                //corrupt pdu?
+        }
+        return incomingPdu;
     }
 }
