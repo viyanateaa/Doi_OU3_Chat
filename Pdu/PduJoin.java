@@ -16,8 +16,7 @@ public class PduJoin extends Pdu{
     public PduJoin(String identity) throws UnsupportedEncodingException {
 
         sequenceBuilder = new ByteSequenceBuilder(op);
-        sequenceBuilder.append((byte)identity.getBytes("UTF-8")
-                .length);
+        sequenceBuilder.append((byte)identity.getBytes("UTF-8").length);
         sequenceBuilder.pad();
         sequenceBuilder.append(identity.getBytes("UTF-8")).pad();
         bytes = sequenceBuilder.toByteArray();
