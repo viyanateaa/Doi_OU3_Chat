@@ -2,7 +2,6 @@ package Pdu;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -56,4 +55,16 @@ public class PduPjoin extends Pdu{
         System.out.println(timeStamp);
         System.out.println(clientIdentity + " has joined the chat.");
     }
+
+
+
+    public String getClientIdentity() {
+        return clientIdentity;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+
 }

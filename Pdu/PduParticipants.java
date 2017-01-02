@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Created by kristoffer & Viyan on 2016-12-26.
  */
+///
 public class PduParticipants extends Pdu{
 
     private String[] participants;
