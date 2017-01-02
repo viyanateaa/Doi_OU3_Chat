@@ -43,17 +43,14 @@ public class Checksum {
      * correct checksum.
      */
 
-    //// TODO: 2016-10-11 test the checksum
     public static byte computeChecksum(byte[] buf) {
-
         int sum = 0;
 
         for (int i = 0; i < buf.length; i++) {
-
             sum += (buf[i]&0xff);
 
             if(sum > 255){
-                sum = sum - 255;
+                sum = (sum - 255);
             }
         }
         return (byte)(255 - sum);

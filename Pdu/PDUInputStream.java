@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class PDUInputStream {
 
-    private InputStream inputStream;
     private int opByte;
+    private InputStream inputStream;
     private Pdu incomingPdu;
 
     public PDUInputStream(InputStream inputStream) {
@@ -31,10 +31,10 @@ public class PDUInputStream {
                 incomingPdu = new PduSlist(inputStream);
                 break;
             case 10:
-                //mess
+                incomingPdu = new PduMess(inputStream);
                 break;
             case 11:
-                //quit
+                incomingPdu = new PduQuit(inputStream);
                 break;
             case 16:
                 incomingPdu = new PduPjoin(inputStream);
@@ -46,8 +46,12 @@ public class PDUInputStream {
                 incomingPdu = new PduParticipants(inputStream);
                 break;
             default:
-                //corrupt pdu?
+                System.out.println("unknown OP, corrupt pdu.");
         }
         return incomingPdu;
+    }
+
+    public boolean hasPdu() throws IOException {
+        return inputStream.available() != 0;
     }
 }

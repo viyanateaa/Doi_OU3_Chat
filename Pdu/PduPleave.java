@@ -56,7 +56,6 @@ public class PduPleave extends Pdu{
         System.out.println(clientIdentity + " has left the chat.");
     }
 
-
     public Date getTimeStamp() {
         return timeStamp;
     }

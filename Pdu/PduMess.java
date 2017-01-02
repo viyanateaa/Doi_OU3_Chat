@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.IllegalFormatException;
 
 /**
  * Created by kristoffer & Viyan on 2016-09-28.
  */
-//// Not Done!
 public class PduMess extends Pdu {
 
     private final byte op = 10;
@@ -16,100 +18,150 @@ public class PduMess extends Pdu {
     private String message;
     private int identityLength;
     private int messageLength;
-    private int time;
+    private int checksum;
+    private Date timeStamp;
 
+    /**
+     * The constructor for a PduMess to send.
+     * @param clientIdentity
+     * @param message
+     * @throws UnsupportedEncodingException
+     */
 
-    private String clientIdentity;
-    private  int clientIdentitylength;
-
-    // mess skapas
     public PduMess(String clientIdentity, String message) throws UnsupportedEncodingException {
-        /**
-         * Creates the header of the pdu.
-         */
+        this.message = message;
+        this.identity = clientIdentity;
+
         sequenceBuilder = new ByteSequenceBuilder(op);
+        sequenceBuilder.pad();
+
+
+        // Add ID length.
+        sequenceBuilder.append((byte)identity.getBytes("UTF-8")
+                .length);
+
+        // check sum
         sequenceBuilder.append((byte)0);
 
-        /*
-        add Id CLIENT LENGTH
-         */
-        // ta in id length som byte
-        sequenceBuilder.append((byte)clientIdentity.getBytes("UTF-8").length);
-        sequenceBuilder.append((byte)0);
-        //check sum
+        //messagelength + pad
+        sequenceBuilder.appendShort((byte)message.getBytes("UTF-8")
+                .length).pad();
 
-        sequenceBuilder.appendShort((byte)message.getBytes("UTF-8").length).pad();
-
-        //tidstämpel
+        //Timestamp (added by server, so now only 0)
         sequenceBuilder.appendInt((byte)0);
 
+        //adds message + pad and client ID + pad
         sequenceBuilder.append(message.getBytes("UTF-8")).pad();
-        sequenceBuilder.append(clientIdentity.getBytes("UTF-8")).pad();
+        sequenceBuilder.append(identity.getBytes("UTF-8")).pad();
 
-        bytes= sequenceBuilder.toByteArray();
+        bytes = sequenceBuilder.toByteArray();
 
-        bytes[4]= Checksum.computeChecksum(bytes);
+        //computes and puts in the checksum.
+        bytes[3] = Checksum.computeChecksum(bytes);
     }
 
-
+    /**
+     * The consturctor for a recived PduMess
+     * @param inputStream
+     * @throws IOException
+     */
     public PduMess(InputStream inputStream) throws IOException {
-        byte[] temp;
-
+        byte[] byteArray;
         sequenceBuilder = new ByteSequenceBuilder(op);
-        temp= new byte[1];
-        inputStream.read(temp,0,1);
 
-        sequenceBuilder.append(temp);
+        //Checks the first instance of padding
+        byteArray = new byte[1];
+        byteArray[0] = (byte)inputStream.read();
+        if (byteArray[0] != 0){
+            throw new IllegalArgumentException("the padding of the " +
+                    "Pdu is wrong. Message corrupted!");
+        }
+        sequenceBuilder.append(byteArray);
 
-        inputStream.read(temp,0,1);
-        sequenceBuilder.append(temp);
-        identityLength= temp [0];
+        //gets identity length.
+        byteArray[0] = (byte)inputStream.read();
+        sequenceBuilder.append(byteArray);
+        identityLength = byteArray[0];
 
-        inputStream.read(temp,0,1);
-        sequenceBuilder.append(temp);
+        //gets the checksum.
+        byteArray[0] = (byte)inputStream.read();
+        sequenceBuilder.append(byteArray);
+        checksum = byteArray[0];
 
-        temp= new byte[2];
-        inputStream.read(temp,0,2);
-        messageLength = ((temp[0]& 0xff) <<8) | (temp[1] & 0xff);
-        sequenceBuilder.append(temp);
+        //gets the message length
+        byteArray = new byte[2];
+        byteArray[0] = (byte)inputStream.read();
+        byteArray[1] = (byte)inputStream.read();
+        messageLength = ((byteArray[0]& 0xff) <<8) | (byteArray[1] & 0xff);
+        sequenceBuilder.append(byteArray);
 
-        inputStream.read(temp,0,2);
-        sequenceBuilder.append(temp);
+        //there should be padding next, checks it.
+        byteArray[0] = (byte)inputStream.read();
+        byteArray[1] = (byte)inputStream.read();
+        if (byteArray[0] != 0 || byteArray[1] != 0){
+            throw new IllegalArgumentException("the padding of the " +
+                    "Pdu is wrong. Message corrupted!");
+        }
+        sequenceBuilder.append(byteArray);
 
-        temp= new byte[4];
-        inputStream.read(temp,0,4);
-        time = ByteBuffer.wrap(temp).getInt();
-        sequenceBuilder.append(temp);
+        //gets the timestamp and converts it to standard date format.
+        byteArray = new byte[4];
+        inputStream.read(byteArray,0,4);
+        long unixTime = ByteBuffer.wrap(byteArray).getInt();
+        timeStamp = new Date(unixTime*1000);
+        sequenceBuilder.append(byteArray);
 
-        temp = new byte[messageLength];
-        inputStream.read(temp,0,messageLength);
-        message = new String(temp,"UTF-8");
-        sequenceBuilder.append(temp);
+        //gets the message.
+        byteArray = new byte[messageLength];
+        inputStream.read(byteArray,0,messageLength);
+        message = new String(byteArray, StandardCharsets.UTF_8);
+        sequenceBuilder.append(byteArray);
 
-        if (!(messageLength %4 ==0 )){
-            temp = new byte[4-(messageLength%4)];
-            inputStream.read(temp, 0,4-(messageLength%4));
-            sequenceBuilder.append(temp);
+        //takes care of padding if there is any.
+        byteArray = new byte[1];
+        if (!(messageLength %4 == 0)){
+            for(int i = 0;i < (4 - (messageLength%4));i++){
+                byteArray[0] = (byte)inputStream.read();
+                if(byteArray[0] != 0){
+                    throw new IllegalArgumentException("the padding" +
+                            " of the Pdu is wrong. Message corrupted!");
+                }
+                sequenceBuilder.append(byteArray);
+            }
         }
 
-        temp= new byte[4];
-        inputStream.read(temp,0,4);
-        sequenceBuilder.append(temp);
+        //gets the identity.
+        byteArray = new byte[identityLength];
+        inputStream.read(byteArray,0,identityLength);
+        sequenceBuilder.append(byteArray);
+        identity = new String(byteArray,StandardCharsets.UTF_8);
 
-        temp = new byte[clientIdentitylength];
-        clientIdentity = new String(temp,"UTF-8");
-        sequenceBuilder.append(temp);
+        //takes care of any remaining padding if there is any.
+        byteArray = new byte[1];
+        if (!(identityLength%4 == 0)){
+            for(int i = 0;i < (4 - (identityLength%4));i++){
+                byteArray[0] = (byte)inputStream.read();
+                if(byteArray[0] != 0){
+                    throw new IllegalArgumentException("the padding" +
+                            " of the Pdu is wrong. Message corrupted!");
+                }
+                sequenceBuilder.append(byteArray);
+            }
+        }
+        bytes = sequenceBuilder.toByteArray();
+        checksumTest(bytes);
+    }
 
-
-
-        //fixa for client samma som förre!
-
-
-//nothing
-
+    public void checksumTest(byte[] bytes){
+        int test = Checksum.computeChecksum(bytes);
+        if(test != 0){
+            throw new IllegalArgumentException("The checksum is not" +
+                    " correct. message corrupt!");
+        }
     }
 
     public void printInfo(){
-
+        System.out.println(timeStamp + " [" + identity +"]");
+        System.out.println(message);
     }
 }
