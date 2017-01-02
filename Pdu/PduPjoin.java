@@ -30,7 +30,7 @@ public class PduPjoin extends Pdu{
             timeArray[j] = (byte)inputStream.read();
         }
         long unixTime = ByteBuffer.wrap(timeArray).getInt();
-        timeStamp = new Date(unixTime);
+        timeStamp = new Date(unixTime*1000);
 
         //gets the client ID
         byte[] clientId = new byte[identityLenght];
@@ -48,7 +48,6 @@ public class PduPjoin extends Pdu{
                 }
             }
         }
-
     }
 
     public void printInfo(){

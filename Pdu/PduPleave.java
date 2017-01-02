@@ -41,7 +41,7 @@ public class PduPleave extends Pdu{
         }
         clientIdentity = new String(clientId, StandardCharsets.UTF_8);
 
-        //takes padding into account.
+        //checks if there is padding
         if(identityLenght%4 != 0){
             for(int i = 0;i < (4 - (identityLenght%4));i++){
                 if(inputStream.read() != 0){
