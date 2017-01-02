@@ -107,15 +107,9 @@ public class PduMess extends Pdu {
 
 //nothing
 
+    }
 
-
-
-
-
-
-
-
-
+    public void printInfo(){
 
     }
 }

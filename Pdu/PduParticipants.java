@@ -15,25 +15,24 @@ public class PduParticipants extends Pdu{
     public PduParticipants(InputStream inputStream) throws IOException {
         sequenceBuilder = new ByteSequenceBuilder((byte)19);
 
+        //collects info about nr of participants.
         byte nrOfClients = (byte)inputStream.read();
         sequenceBuilder.append(nrOfClients);
 
         participants = new String[nrOfClients];
+
+        //collects info about length of pdu.
         byte[] lenghtArray = new byte[2];
-
-
-
-        //collects info about length of pdu
         lenghtArray[0] = (byte)inputStream.read();
         lenghtArray[1] = (byte)inputStream.read();
 
-        int lenghtOfPdu = ((lenghtArray[0] & 0xff) | (lenghtArray[1]
-                & 0xff));
+        int lenghtOfPdu = ((lenghtArray[0] & 0xff) << 8 |
+                (lenghtArray[1] & 0xff));
 
         sequenceBuilder.append(lenghtArray);
 
         //split info into separate strings
-        for(int i=0;i<nrOfClients;i++){
+        for(int i=0;i<(int)nrOfClients;i++){
             byte[] name = new byte[65355];
             int index = 0;
             while (true){
