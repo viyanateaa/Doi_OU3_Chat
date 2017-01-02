@@ -28,7 +28,7 @@ public class PDUInputStream {
 
         switch (opByte){
             case 4:
-                //Slist
+                incomingPdu = new PduSlist(inputStream);
                 break;
             case 10:
                 //mess

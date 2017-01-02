@@ -15,12 +15,12 @@ public class PduParticipants extends Pdu{
 
         byte nrOfClients = (byte)inputStream.read();
         participants = new String[nrOfClients];
-        byte[] lenghtArray = new byte[2];
+        byte[] lengthArray = new byte[2];
 
         //collects info about length of pdu
-        lenghtArray[0] = (byte)inputStream.read();
-        lenghtArray[1] = (byte)inputStream.read();
-        int lenghtOfPdu = ((lenghtArray[0] & 0xff) | (lenghtArray[1]
+        lengthArray[0] = (byte)inputStream.read();
+        lengthArray[1] = (byte)inputStream.read();
+        int lengthOfPdu = ((lengthArray[0] & 0xff) | (lengthArray[1]
                 & 0xff));
 
         //split info into separate strings
@@ -37,10 +37,10 @@ public class PduParticipants extends Pdu{
             participants[i] = new String(name, StandardCharsets
                     .UTF_8);
         }
-        // takes care of if there is remaining padding. Checks it
+        // if there is remaining padding takes care of. Checks it
         // as well.
-        if(lenghtOfPdu%4 != 0){
-            for (int j = 0; j < (4 - (lenghtOfPdu % 4)); j++) {
+        if(lengthOfPdu%4 != 0){
+            for (int j = 0; j < (4 - (lengthOfPdu % 4)); j++) {
                 if (inputStream.read() != (byte)0) {
                     throw new IllegalArgumentException("The format " +
                             "for PduParticipants is wrong! corrupt " +
