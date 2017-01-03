@@ -48,7 +48,7 @@ public class PduMess extends Pdu {
                 .length).pad();
 
         //Timestamp (added by server, so now only 0)
-        sequenceBuilder.appendInt((byte)0);
+        sequenceBuilder.appendInt(0);
 
         //adds message + pad and client ID + pad
         sequenceBuilder.append(message.getBytes("UTF-8")).pad();
