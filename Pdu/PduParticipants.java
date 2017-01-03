@@ -3,6 +3,9 @@ package Pdu;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by kristoffer & Viyan on 2016-12-26.
@@ -10,48 +13,43 @@ import java.nio.charset.StandardCharsets;
 ///
 public class PduParticipants extends Pdu{
 
-    private String[] participants;
+    private List<String> participantsList;
+    private int nrOfClients;
 
     public PduParticipants(InputStream inputStream) throws IOException {
         sequenceBuilder = new ByteSequenceBuilder((byte)19);
 
-        //collects info about nr of participants.
-        byte nrOfClients = (byte)inputStream.read();
-        sequenceBuilder.append(nrOfClients);
+        //collects info about nr of participantsList.
+        byte clientNr = (byte)inputStream.read();
+        this.nrOfClients = clientNr;
+        sequenceBuilder.append(clientNr);
 
-        participants = new String[nrOfClients];
+        participantsList = new ArrayList<>();
 
-        //collects info about length of pdu.
+        //collects info about length of participantsList.
         byte[] lenghtArray = new byte[2];
         lenghtArray[0] = (byte)inputStream.read();
         lenghtArray[1] = (byte)inputStream.read();
 
-        int lenghtOfPdu = ((lenghtArray[0] & 0xff) << 8 |
+        int lenghtOfParticipants = ((lenghtArray[0] & 0xff) << 8 |
                 (lenghtArray[1] & 0xff));
-
         sequenceBuilder.append(lenghtArray);
 
         //split info into separate strings
-        for(int i=0;i<(int)nrOfClients;i++){
-            byte[] name = new byte[65355];
-            int index = 0;
-            while (true){
-                name[index] = (byte)inputStream.read();
-                sequenceBuilder.append(name[index]);
-                if(name[index] == 0){
-                    break;
-                }
-                index++;
+        byte[] byteArray = new byte[lenghtOfParticipants];
+        inputStream.read(byteArray,0,lenghtOfParticipants);
+        int offset = 0;
+        for(int i = 0;i < lenghtOfParticipants;i++){
+            if(byteArray[i] == 0){
+                participantsList.add(new String(Arrays.copyOfRange
+                        (byteArray,offset,i),StandardCharsets.UTF_8));
+                offset = i + 1;
             }
-            participants[i] = new String(name, StandardCharsets.UTF_8);
-
         }
-
-
         // takes care of if there is remaining padding. Checks it
         // as well.
-        if(lenghtOfPdu%4 != 0){
-            for (int j = 0; j < (4 - (lenghtOfPdu % 4)); j++) {
+        if(lenghtOfParticipants%4 != 0){
+            for (int j = 0; j < (4 - (lenghtOfParticipants % 4)); j++) {
                 byte testByte = (byte)inputStream.read();
                 if (testByte != (byte)0) {
                     throw new IllegalArgumentException("The format " +
@@ -65,18 +63,22 @@ public class PduParticipants extends Pdu{
     }
 
     /**
-     * Method that prints out the participants of the chat to the
+     * Method that prints out the participantsList of the chat to the
      * user.
      */
     public void printInfo(){
-        System.out.println("Participants:");
-        for (String participant : participants) {
-            System.out.println(participant);
+        for (int i = 1; i < nrOfClients + 1; i++) {
+            System.out.println("Participant nr: "+ (i));
+            System.out.println("Client name: "+ participantsList.get
+                    (i));
         }
     }
 
+    public List<String> getParticipantsList() {
+        return participantsList;
+    }
 
-    public String[] getParticipants() {
-        return participants;
+    public int getNrOfClients() {
+        return nrOfClients;
     }
 }

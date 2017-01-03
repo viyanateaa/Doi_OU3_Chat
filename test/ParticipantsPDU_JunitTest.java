@@ -39,13 +39,13 @@ public class ParticipantsPDU_JunitTest {
 
         PduParticipants participants_fromStream = new PduParticipants(In_steam);
         //byte [] list_2 = participants_fromStream.getBytes();
-        System.out.println(participants_fromStream.getParticipants()[0]);
+        System.out.println(participants_fromStream.getParticipantsList()[0]);
 
         //String Text = new String ("PO");
 
 
 
-        assertNotEquals(participants_fromStream.getParticipants()[0], "PO");
+        assertEquals(participants_fromStream.getParticipantsList()[0], "PO");
     }
 
 
