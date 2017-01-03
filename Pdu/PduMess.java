@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.IllegalFormatException;
 
 /**
  * Created by kristoffer & Viyan on 2016-09-28.
@@ -33,7 +32,7 @@ public class PduMess extends Pdu {
         this.identity = clientIdentity;
 
         sequenceBuilder = new ByteSequenceBuilder(op);
-        sequenceBuilder.pad();
+        sequenceBuilder.append((byte)0);
 
 
         // Add ID length.

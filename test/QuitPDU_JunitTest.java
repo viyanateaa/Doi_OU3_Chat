@@ -3,7 +3,9 @@ package test;
 import Pdu.PduQuit;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -72,9 +74,47 @@ public class QuitPDU_JunitTest {
 
     @Test
     public void shouldBeAbleToReadQuitFromInStream () throws Exception {
-        //Not Done!
+        byte [] list = {(byte)11,0,0,0};
+        InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
 
+        In_steam.read();
+
+        PduQuit quit_fromStream = new PduQuit(In_steam);
+        byte [] list_2 = quit_fromStream.getBytes();
+
+        assertEquals(list_2.length, list.length);
     }
+
+    @Test
+    public void shouldBeAbleToReadQuitFromInStreamPos () throws Exception {
+        byte [] list = {(byte)11,0,0,0};
+        InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
+
+        In_steam.read();
+
+        PduQuit quit_fromStream = new PduQuit(In_steam);
+        byte [] list_2 = quit_fromStream.getBytes();
+
+        assertEquals(list_2 [1], 0);
+        assertEquals(list_2 [2], 0);
+        assertEquals(list_2 [3], 0);
+    }
+
+    @Test
+    public void shouldBeAbleToReadQuitFromInStreamPosIsNotNull () throws Exception {
+        byte [] list = {(byte)11,0,0,0};
+        InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
+
+        In_steam.read();
+
+        PduQuit quit_fromStream = new PduQuit(In_steam);
+        byte [] list_2 = quit_fromStream.getBytes();
+
+        assertNotEquals(list_2 [1], null);
+        assertNotEquals(list_2 [2], null);
+        assertNotEquals(list_2 [3], null);
+    }
+
 
 
 
