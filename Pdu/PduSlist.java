@@ -28,6 +28,7 @@ public class PduSlist extends Pdu {
         byteArray[1] = (byte)inputStream.read();
         nrOfServers = ((byteArray[0] & 0xff) << 8) | (byteArray[1] &
                 0xff);
+        sequenceBuilder.append(byteArray);
 
         //Collects information
         serverList = new LinkedList<>();
@@ -132,5 +133,6 @@ public class PduSlist extends Pdu {
         public String getServerName() {
             return serverName;
         }
+
     }
 }

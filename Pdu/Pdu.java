@@ -34,5 +34,9 @@ public abstract class Pdu {
      * Abstract method that print the information of a pdu.
      */
     abstract public void printInfo();
+
+    public ByteSequenceBuilder getSequenceBuilder() {
+        return sequenceBuilder;
+    }
 }
 
