@@ -89,8 +89,10 @@ public class PduSlist extends Pdu {
     }
 
     public void printInfo(){
+
         for (int i = 0; i < nrOfServers; i++){
             Server currentServer = serverList.get(i);
+            System.out.println("hej i");
 
             System.out.println("Server nr: " + (i+1));
             System.out.println("Server Name: "+ currentServer

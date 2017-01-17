@@ -1,12 +1,11 @@
 package Pdu;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by kristoffer on 2017-01-03.
@@ -16,30 +15,78 @@ public class Client {
     private int port;
     private InetAddress ipAddress;
     private Scanner scanner;
-    private String ID;
+    private String idString;
     private Socket socket;
+    private int chatPort;
+    private InetAddress chatIP;
+    private LinkedBlockingDeque <Pdu> inQueue;
 
-    public Client(String[] input) throws IOException {
-        ID = input[0];
+    public Client(String[] input)  {
+        idString = input[0];
         String serverType = input[1];
-        ipAddress = InetAddress.getByName(input[2]);
+
+        try {
+            ipAddress = InetAddress.getByName(input[2]);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.out.println("the entered host is not known " +
+                    "please restart the application");
+            System.exit(1);
+        }
+
         port = Integer.parseInt(input[3]);
         scanner = new Scanner(System.in);
+        inQueue = new LinkedBlockingDeque<>();
+
 
         //tests so the user has entered the right input.
-        testInput(ID,serverType,port);
+        testInput(idString,serverType,port);
 
         if(serverType.equals("ns")){
 
-            connectToNameServer();
-            chooseChatServer();
+            try {
+                connectToNameServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                chooseChatServer();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                System.out.println("the chosen server is not known," +
+                        " please start over");
+                System.exit(1);
+            }
+            // connect to ChatServer
+            try {
+                socket = new Socket(chatIP,chatPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("were unable to connect to " +
+                        "server");
+            }
+            chatOutput(socket);
+            chatInput(socket);
+            chatPrint();
+
 
         }else if(serverType.equals("cs")){
 
+            chatPort = port;
+            chatIP = ipAddress;
+            //connect to chatServer
+            try {
+                socket = new Socket(chatIP,chatPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("were unable to connect to " +
+                        "server");
+            }
+            chatOutput(socket);
+            chatInput(socket);
+            chatPrint();
+
         }
-
-
-
 
     }
     /**
@@ -85,30 +132,32 @@ public class Client {
         while(waiting){
             if(inputStream.hasPdu()){
                 incomingPdu = inputStream.readPdu();
+
                 //test so a PduSlist has been returned.
-                if(!(incomingPdu instanceof PduSlist)){
+                if(!(incomingPdu.getClass().equals(PduSlist.class))){
                     throw new IllegalArgumentException("Wrong pdu " +
                             "received!");
                 }else{
                     incomingPdu.printInfo();
+                    System.out.println("has print info of servers");
+                    waiting = false;
                 }
-                waiting = false;
             }
         }
         socket.close();
     }
 
     /**
-     * Method that gets the ip and portNr to a chatserve
+     * Method that gets the ip and portNr to a chatserver
      * from the user.
      * @throws UnknownHostException
      */
     private void chooseChatServer() throws UnknownHostException {
-        String userInput = null;
+        String userInput = "start";
 
         while (!userInput.equals("connect")){
             System.out.println("Type 'connect' to connect to a chat" +
-                    " server or quit to exit.");
+                    " server or 'quit' to exit.");
             userInput = scanner.nextLine();
             if (userInput.equals("quit")){
                 System.out.println("user has chosen to exit, client" +
@@ -119,12 +168,115 @@ public class Client {
         //gets the ip entered by user
         System.out.println("Enter the Ip address for chatserver: ");
         userInput = scanner.nextLine();
-        ipAddress = InetAddress.getByName(userInput);
+        chatIP = InetAddress.getByName(userInput);
 
         //gets the port-nr entered by user
         System.out.println("Enter the port number for the " +
                 "chatserver: ");
         userInput = scanner.nextLine();
-        port = Integer.parseInt(userInput);
+        chatPort = Integer.parseInt(userInput);
+    }
+
+    /**
+     * Method that handles the output of the ChatClient
+     * @param socket that the client will send pdu to.
+     */
+    private void chatOutput(Socket socket){
+
+        Scanner userInputScanner = new Scanner(System.in);
+        Thread outputThread = new Thread(){
+            public void run(){
+                try {
+                    PDUOutputStream outputStream = new PDUOutputStream(socket
+                            .getOutputStream());
+                    PduJoin joinRequest = new PduJoin(idString);
+                    outputStream.sendPDU(joinRequest);
+                    String messageString;
+                    boolean sending = true;
+                    while(sending){
+                        messageString = scanner.nextLine();
+
+                        if(messageString.equals("quit")){
+                            PduQuit quitMessage = new PduQuit();
+                            outputStream.sendPDU(quitMessage);
+                            System.out.println("you have exit the " +
+                                    "application, Goodbye");
+                            sending = false;
+                        }
+
+                        PduMess messagePdu = new PduMess(idString,
+                                messageString);
+                        outputStream.sendPDU(messagePdu);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Lost contact with server.");
+                    System.exit(1);
+                }
+            }
+        };outputThread.start();
+    }
+
+    /**
+     * Method that handles the input of the ChatClient
+     * @param socket that the client will receive pdu from.
+     */
+    private void chatInput(Socket socket){
+
+        Thread inputThread = new Thread(){
+
+            public void run(){
+                try {
+                    PDUInputStream inputStream = new PDUInputStream
+                            (socket.getInputStream());
+                    boolean receiving = true;
+                    Pdu receivedPdu;
+
+                    while (receiving){
+                        if(inputStream.hasPdu()){
+                            receivedPdu = inputStream.readPdu();
+                            if(receivedPdu.getClass().equals
+                                    (PduCorrupt.class) || receivedPdu
+                                    .getClass().equals(PduQuit.class)){
+                                receiving = false;
+                            }
+                            inQueue.add(receivedPdu);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("the client has been shut " +
+                            "down.");
+                    System.exit(1);
+                }
+            }
+        };inputThread.start();
+    }
+
+    /**
+     * Method that prints the info from the recieved pdu to the user
+     */
+    private void chatPrint(){
+
+        boolean chatRunning = true;
+        Pdu temp;
+
+        while (chatRunning){
+            if(!inQueue.isEmpty()){
+                try {
+                   temp = inQueue.take();
+                    if(temp.getClass().equals(PduQuit.class) ||
+                            temp.getClass().equals(PduCorrupt.class)){
+                        temp.printInfo();
+                        chatRunning = false;
+                    }
+                    temp.printInfo();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 }

@@ -22,7 +22,7 @@ public class PDUInputStream {
      * @throws java.io.EOFException If the stream closed without an error.
      * @throws java.io.IOException If the stream closed with an error.
      */
-    public Pdu readPdu() throws EOFException, IOException {
+    public Pdu readPdu() throws IOException {
 
         opByte = inputStream.read();
 
@@ -46,7 +46,7 @@ public class PDUInputStream {
                 incomingPdu = new PduParticipants(inputStream);
                 break;
             default:
-                System.out.println("unknown OP, corrupt pdu.");
+                incomingPdu = new PduCorrupt();
         }
         return incomingPdu;
     }
