@@ -68,6 +68,7 @@ public class PduParticipants extends Pdu{
      * user.
      */
     public void printInfo(){
+
         for (int i = 0; i < nrOfClients; i++) {
             System.out.println("Participant nr: "+ (i + 1));
             System.out.println("Client name: "+ participantsList.get

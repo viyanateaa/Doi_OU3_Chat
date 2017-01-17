@@ -34,7 +34,7 @@ public class PduSlist extends Pdu {
         serverList = new LinkedList<>();
         for(int i = 0;i < nrOfServers;i++){
 
-            //gets adress of server.
+            //gets address of server.
             byteArray = new byte[4];
             byteArray[0] = (byte)inputStream.read();
             byteArray[1] = (byte)inputStream.read();
@@ -89,10 +89,13 @@ public class PduSlist extends Pdu {
     }
 
     public void printInfo(){
-
+        if(nrOfServers == 0){
+            System.out.println("here are no clients connected to " +
+                    "this name server. \n please exit the program " +
+                    "and connect to another name server.");
+        }else {
         for (int i = 0; i < nrOfServers; i++){
             Server currentServer = serverList.get(i);
-            System.out.println("hej i");
 
             System.out.println("Server nr: " + (i+1));
             System.out.println("Server Name: "+ currentServer
@@ -102,6 +105,7 @@ public class PduSlist extends Pdu {
                     .getPort());
             System.out.println("Nr of Clients: "+ currentServer
                     .getNrOfClients() +"\n");
+        }
         }
     }
 

@@ -22,6 +22,8 @@ public class Client {
     private LinkedBlockingDeque <Pdu> inQueue;
 
     public Client(String[] input)  {
+        //Sets the correct values, an initializes variables for the
+        // client
         idString = input[0];
         String serverType = input[1];
 
@@ -33,15 +35,15 @@ public class Client {
                     "please restart the application");
             System.exit(1);
         }
-
         port = Integer.parseInt(input[3]);
-        scanner = new Scanner(System.in);
         inQueue = new LinkedBlockingDeque<>();
+        scanner = new Scanner(System.in);
 
 
         //tests so the user has entered the right input.
         testInput(idString,serverType,port);
 
+        //if client connects to name server first
         if(serverType.equals("ns")){
 
             try {
@@ -65,11 +67,12 @@ public class Client {
                 System.out.println("were unable to connect to " +
                         "server");
             }
+            //starts the chat
             chatOutput(socket);
             chatInput(socket);
             chatPrint();
 
-
+        //if client connects to chat server directly
         }else if(serverType.equals("cs")){
 
             chatPort = port;
@@ -82,10 +85,10 @@ public class Client {
                 System.out.println("were unable to connect to " +
                         "server");
             }
+            //starts the chat
             chatOutput(socket);
             chatInput(socket);
             chatPrint();
-
         }
 
     }
@@ -128,6 +131,7 @@ public class Client {
 
         boolean waiting = true;
         Pdu incomingPdu;
+
         //waiting for PduSlist
         while(waiting){
             if(inputStream.hasPdu()){
@@ -139,7 +143,6 @@ public class Client {
                             "received!");
                 }else{
                     incomingPdu.printInfo();
-                    System.out.println("has print info of servers");
                     waiting = false;
                 }
             }
@@ -153,10 +156,10 @@ public class Client {
      * @throws UnknownHostException
      */
     private void chooseChatServer() throws UnknownHostException {
-        String userInput = "start";
+        String userInput = "zero";
 
-        while (!userInput.equals("connect")){
-            System.out.println("Type 'connect' to connect to a chat" +
+        while (!userInput.equals("join")){
+            System.out.println("Type 'join' to connect to a chat" +
                     " server or 'quit' to exit.");
             userInput = scanner.nextLine();
             if (userInput.equals("quit")){
@@ -200,7 +203,7 @@ public class Client {
                             PduQuit quitMessage = new PduQuit();
                             outputStream.sendPDU(quitMessage);
                             System.out.println("you have exit the " +
-                                    "application, Goodbye");
+                                    "chat, Goodbye!");
                             sending = false;
                         }
 

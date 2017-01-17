@@ -11,7 +11,8 @@ public class ChatClient {
             Client client = new Client(args);
         }else
             throw new IllegalArgumentException("Wrong nr of " +
-                    "arguments for program");
+                    "arguments for program \n it should be " +
+                    "'identity' 'cs/ns' 'server name' 'port nr'");
 
     }
 }

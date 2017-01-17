@@ -40,6 +40,7 @@ public class PduQuit extends Pdu {
      * for the user.
      */
     public void printInfo(){
-        System.out.println("You have been disconnected from server.");
+        //System.out.println("You have been disconnected from
+        // server.");
     }
 }

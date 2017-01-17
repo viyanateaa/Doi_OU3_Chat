@@ -2,6 +2,7 @@ package test;
 
 import Pdu.PDUInputStream;
 import Pdu.Pdu;
+import Pdu.PduCorrupt;
 import Pdu.PduMess;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class InputSteramPDU_JunitTest {
         InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
         PDUInputStream in_list =new PDUInputStream(In_steam);
         Pdu pdu =in_list.readPdu();
-        //assertEquals();
+        assertEquals(pdu.getClass(),PduCorrupt.class);
 
     }
 
