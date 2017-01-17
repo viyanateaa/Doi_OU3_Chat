@@ -46,6 +46,7 @@ public class PduParticipants extends Pdu{
                 offset = i + 1;
             }
         }
+        sequenceBuilder.append(byteArray);
         // takes care of if there is remaining padding. Checks it
         // as well.
         if(lenghtOfParticipants%4 != 0){
