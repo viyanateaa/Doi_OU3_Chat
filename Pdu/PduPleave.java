@@ -9,7 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-
+/**
+ * Class that represents a Pleave Pdu.
+ */
 public class PduPleave extends Pdu{
 
     private Date timeStamp;
@@ -51,6 +53,10 @@ public class PduPleave extends Pdu{
             }
         }
     }
+
+    /**
+     * Method that prints the info of the pdu.
+     */
     public void printInfo(){
         System.out.println(timeStamp);
         System.out.println(clientIdentity + " has left the chat.");

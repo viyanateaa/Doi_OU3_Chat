@@ -169,7 +169,8 @@ public class Client {
             }
         }
         //gets the ip entered by user
-        System.out.println("Enter the Ip address for chatserver: ");
+        System.out.println("Enter the Ip address for chatserver in " +
+                "format <192.168.0.1>");
         userInput = scanner.nextLine();
         chatIP = InetAddress.getByName(userInput);
 
@@ -263,18 +264,19 @@ public class Client {
     private void chatPrint(){
 
         boolean chatRunning = true;
-        Pdu temp;
+        Pdu PduToPrint;
 
         while (chatRunning){
             if(!inQueue.isEmpty()){
                 try {
-                   temp = inQueue.take();
-                    if(temp.getClass().equals(PduQuit.class) ||
-                            temp.getClass().equals(PduCorrupt.class)){
-                        temp.printInfo();
+                   PduToPrint = inQueue.take();
+                    if(PduToPrint.getClass().equals(PduQuit.class) ||
+                            PduToPrint.getClass().equals(PduCorrupt.class)){
+                        PduToPrint.printInfo();
                         chatRunning = false;
+                        System.exit(-1);
                     }
-                    temp.printInfo();
+                    PduToPrint.printInfo();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

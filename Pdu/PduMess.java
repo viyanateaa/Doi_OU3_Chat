@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
+ * Class that represents a Message Pdu.
  * Created by kristoffer & Viyan on 2016-09-28.
  */
 public class PduMess extends Pdu {
@@ -22,9 +23,9 @@ public class PduMess extends Pdu {
 
     /**
      * The constructor for a PduMess to send.
-     * @param clientIdentity
-     * @param message
-     * @throws UnsupportedEncodingException
+     * @param clientIdentity chosen by the user.
+     * @param message to be sent.
+     * @throws UnsupportedEncodingException i UTF-8 is not supported.
      */
 
     public PduMess(String clientIdentity, String message) throws UnsupportedEncodingException {
@@ -61,8 +62,8 @@ public class PduMess extends Pdu {
 
     /**
      * The consturctor for a recived PduMess
-     * @param inputStream
-     * @throws IOException
+     * @param inputStream were the PduMess is recieved from
+     * @throws IOException if unable to read from the inputStream
      */
     public PduMess(InputStream inputStream) throws IOException {
         byte[] byteArray;
@@ -151,6 +152,10 @@ public class PduMess extends Pdu {
         checksumTest(bytes);
     }
 
+    /**
+     * Method that test the checksum of a message.
+     * @param bytes of the Message Pdu.
+     */
     public void checksumTest(byte[] bytes){
         int test = Checksum.computeChecksum(bytes);
         if(test != 0){
@@ -158,7 +163,9 @@ public class PduMess extends Pdu {
                     " correct. message corrupt!");
         }
     }
-
+    /**
+     * method that prints the info of the Pdu.
+     */
     public void printInfo(){
         System.out.println(timeStamp + " [" + identity +"]");
         System.out.println(message);

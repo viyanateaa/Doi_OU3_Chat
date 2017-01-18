@@ -8,9 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Class that represents a Participants Pdu.
  * Created by kristoffer & Viyan on 2016-12-26.
  */
-///
+
 public class PduParticipants extends Pdu{
 
     private List<String> participantsList;
@@ -57,7 +58,7 @@ public class PduParticipants extends Pdu{
                             "for PduParticipants is wrong! corrupt " +
                             "PDU");
                 }
-                sequenceBuilder.append(testByte); //för testerna
+                sequenceBuilder.append(testByte);
             }
         }
         bytes = sequenceBuilder.toByteArray();

@@ -6,7 +6,9 @@
  */
 package Pdu;
 
-
+/**
+ * Class that represents Getlist Pdu.
+ */
 public class GetList extends Pdu {
 
     private final byte op = 3;

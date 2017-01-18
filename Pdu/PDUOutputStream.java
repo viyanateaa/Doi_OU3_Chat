@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Created by viyanateaa on 2016-12-22.
+ * Created by Kristoffer and viyana on 2016-12-22.
  */
 public class PDUOutputStream {
 

@@ -6,6 +6,9 @@ package Pdu;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Class that represents a Quit Pdu.
+ */
 public class PduQuit extends Pdu {
 
     private final byte op = 11;
@@ -40,7 +43,5 @@ public class PduQuit extends Pdu {
      * for the user.
      */
     public void printInfo(){
-        //System.out.println("You have been disconnected from
-        // server.");
     }
 }

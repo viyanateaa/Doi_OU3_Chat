@@ -1,7 +1,8 @@
 package Pdu;
 
 /**
- * Created by kristoffer on 2017-01-17.
+ * Class that contains main funktion that starts Chatclient program.
+ * Created by kristoffer and Viyan on 2017-01-17.
  */
 public class ChatClient {
 
@@ -13,6 +14,5 @@ public class ChatClient {
             throw new IllegalArgumentException("Wrong nr of " +
                     "arguments for program \n it should be " +
                     "'identity' 'cs/ns' 'server name' 'port nr'");
-
     }
 }

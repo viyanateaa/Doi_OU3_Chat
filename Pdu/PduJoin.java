@@ -2,15 +2,15 @@ package Pdu;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * Class that represents a Join Pdu
  * Created by kristoffer & Viyan on 2016-09-28.
  */
 public class PduJoin extends Pdu{
-//did mistake, upload wrong file
     private final byte op = 12;
 
     /**
-     *
-     * @param identity
+     * Constructor PduJoin
+     * @param identity the chosen identity of the user.
      * @throws UnsupportedEncodingException if UTF-8 is not supported.
      */
     public PduJoin(String identity) throws UnsupportedEncodingException {

@@ -38,6 +38,7 @@ package Pdu;
 public class Checksum {
 
     /**
+     * Class that computes checksum of byte arrays.
      * @param buf The buffer to calculate the checksum for.
      * @return The checksum. Should be -1 when checking whether a PDU has
      * correct checksum.

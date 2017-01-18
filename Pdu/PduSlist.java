@@ -6,10 +6,11 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
+
  /**
+  * Class that represents a Slist Pdu.
   * Created by kristoffer & Viyan on 2016-10-11.
   */
-
 
 public class PduSlist extends Pdu {
 
@@ -88,6 +89,9 @@ public class PduSlist extends Pdu {
 
     }
 
+     /**
+      * Method that prints the info of the Pdu
+      */
     public void printInfo(){
         if(nrOfServers == 0){
             System.out.println("here are no clients connected to " +
@@ -109,6 +113,9 @@ public class PduSlist extends Pdu {
         }
     }
 
+     /**
+      * Private class that represents a server.
+      */
     private class Server{
         private String address;
         private int port;

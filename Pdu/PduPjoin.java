@@ -6,6 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/**
+ * Class that represents a Pjoin Pdu.
+ */
 public class PduPjoin extends Pdu{
 
     private String clientIdentity;
@@ -50,6 +53,9 @@ public class PduPjoin extends Pdu{
         }
     }
 
+    /**
+     * Method that prints the info of the Pdu.
+     */
     public void printInfo(){
         System.out.println(timeStamp);
         System.out.println(clientIdentity + " has joined the chat.");
