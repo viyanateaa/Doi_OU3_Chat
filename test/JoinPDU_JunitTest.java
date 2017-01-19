@@ -127,9 +127,5 @@ public class JoinPDU_JunitTest {
         assertEquals("Jonny!",new String(RightId,"UTF-8"));
 
         assertNotEquals(RightId.length,0);
-
-
-        //    how pirnt jonny from RightID ??System.out.println();
-
     }
 }
