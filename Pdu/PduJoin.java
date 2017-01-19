@@ -1,9 +1,16 @@
 package Pdu;
 import java.io.UnsupportedEncodingException;
 
+
+/**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
 /**
  * Class that represents a Join Pdu
- * Created by kristoffer & Viyan on 2016-09-28.
  */
 public class PduJoin extends Pdu{
     private final byte op = 12;

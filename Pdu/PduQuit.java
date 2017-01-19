@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Class that represents a Quit Pdu.
  */
 public class PduQuit extends Pdu {
@@ -32,7 +39,7 @@ public class PduQuit extends Pdu {
         if(byteArray[0] != 0 || byteArray[1] != 0 || byteArray[2]
                 != 0){
             throw new IllegalArgumentException("the padding of the " +
-                    "pdu is wrong. PduQuit corrupted!");
+                    "pdu is wrong. PduQuit corrupted! Please exit program.");
         }else {
             bytes = sequenceBuilder.toByteArray();
         }
@@ -43,5 +50,7 @@ public class PduQuit extends Pdu {
      * for the user.
      */
     public void printInfo(){
+        System.out.println("A quit request has been recieved, " +
+                "exiting application.");
     }
 }

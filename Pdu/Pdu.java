@@ -6,6 +6,13 @@ package Pdu;
 import java.io.InputStream;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Abstract class that represents pdu.
  */
 public abstract class Pdu {
@@ -42,8 +49,5 @@ public abstract class Pdu {
      */
     abstract public void printInfo();
 
-    public ByteSequenceBuilder getSequenceBuilder() {
-        return sequenceBuilder;
-    }
 }
 

@@ -1,7 +1,7 @@
 package test;
 
-import Pdu.PDUInputStream;
 import Pdu.Pdu;
+import Pdu.PduInputStream;
 import Pdu.PduCorrupt;
 import Pdu.PduMess;
 import org.junit.Test;
@@ -14,7 +14,10 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by viyanateaa on 2017-01-03.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
  */
 public class InputSteramPDU_JunitTest {
     @Test
@@ -23,7 +26,7 @@ public class InputSteramPDU_JunitTest {
         //Pjoin
         byte [] list = {(byte)16,(byte)6,(byte)0,(byte)0,0,0,0,0,'J','o','n','n','y','!',0,0,0};
         InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
-        new PDUInputStream(In_steam);
+        new PduInputStream(In_steam);
 
     }
 
@@ -33,7 +36,7 @@ public class InputSteramPDU_JunitTest {
         //Pjoin
         byte [] list = {-2,-3,-0,-5};
         InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
-        PDUInputStream in_list =new PDUInputStream(In_steam);
+        PduInputStream in_list =new PduInputStream(In_steam);
         Pdu pdu =in_list.readPdu();
         assertEquals(pdu.getClass(),PduCorrupt.class);
 
@@ -48,7 +51,7 @@ public class InputSteramPDU_JunitTest {
         byte [] mess_test_1 = pM.getBytes();
 
         InputStream In_steam = new ByteArrayInputStream(mess_test_1,0,mess_test_1.length);
-        PDUInputStream in_mess = new PDUInputStream(In_steam);
+        PduInputStream in_mess = new PduInputStream(In_steam);
         Pdu pdu = in_mess.readPdu();
 
 
@@ -72,7 +75,7 @@ public class InputSteramPDU_JunitTest {
         byte[] mess_test_1 = pM.getBytes();
 
         InputStream In_steam = new ByteArrayInputStream(mess_test_1, 0, mess_test_1.length);
-        PDUInputStream in_mess = new PDUInputStream(In_steam);
+        PduInputStream in_mess = new PduInputStream(In_steam);
         Pdu pdu = in_mess.readPdu();
 
 
@@ -88,7 +91,7 @@ public class InputSteramPDU_JunitTest {
 
         byte [] list = {(byte)11,0,0,0};
         InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
-        PDUInputStream in_quit = new PDUInputStream(In_steam);
+        PduInputStream in_quit = new PduInputStream(In_steam);
         Pdu pdu = in_quit.readPdu();
         pdu.printInfo();
     }
@@ -98,7 +101,7 @@ public class InputSteramPDU_JunitTest {
 
         byte [] list = {(byte)19,2,0,9,'P','O',0,'J','O','N','N','Y',0,0,0,0};
         InputStream In_steam = new ByteArrayInputStream(list,0,list.length);
-        PDUInputStream in_participants = new PDUInputStream(In_steam);
+        PduInputStream in_participants = new PduInputStream(In_steam);
         Pdu pdu = in_participants.readPdu();
 
         for (int i =1; i < list.length; i++) {

@@ -7,37 +7,46 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Created by kristoffer and Viyan on 2017-01-18.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
+ * Abstract server for testing a ChatClient.
  */
 public abstract class Server {
-    protected ServerSocket serverSocket;
     protected Socket socket;
-    protected InputStream serverInputStream;
+    protected ServerSocket serverSocket;
     protected OutputStream serverOutputStream;
+    protected InputStream serverInputStream;
 
     public Server(int port) throws IOException {
 
         serverSocket = new ServerSocket(port);
         socket = serverSocket.accept();
-        serverInputStream = socket.getInputStream();
         serverOutputStream = socket.getOutputStream();
+        serverInputStream = socket.getInputStream();
 
         Thread serverThread = new Thread(){
             public void run(){
-                while(socket.isConnected()){
+                boolean isConnected = true;
+                if(!socket.isConnected()){
+                    isConnected = false;
+                }
+                while(isConnected){
                     try {
                         int byteArraySize = serverInputStream
                                 .available();
                         byte byteArray[] = new byte[byteArraySize];
+
                         if(byteArraySize != 0){
                             serverInputStream.read(byteArray,0,
                                     byteArraySize);
-                            returnInfo();
-                            sleep(500);
+                            serverMessage();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -45,5 +54,5 @@ public abstract class Server {
         };serverThread.start();
     }
 
-    public abstract void returnInfo() throws IOException;
+    public abstract void serverMessage() throws IOException;
 }

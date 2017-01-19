@@ -1,8 +1,15 @@
 package Pdu;
 
 /**
- * Class that contains main funktion that starts Chatclient program.
- * Created by kristoffer and Viyan on 2017-01-17.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
+ * Class that contains main function that starts Chatclient program.
+ * @throws IllegalArgumentException if wrong nr of arguments are used.
  */
 public class ChatClient {
 

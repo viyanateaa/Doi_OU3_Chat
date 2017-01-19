@@ -8,8 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 
  /**
+  * Course: Datakommutikation och internet 5DV167
+  * Assignment: OU3
+  * Written by: Kristoffer & Viyan
+  * Version: 19/1 -17.
+  */
+
+ /**
   * Class that represents a Slist Pdu.
-  * Created by kristoffer & Viyan on 2016-10-11.
   */
 
 public class PduSlist extends Pdu {
@@ -17,6 +23,12 @@ public class PduSlist extends Pdu {
     private int nrOfServers;
     private List<Server> serverList;
 
+     /**
+      * Constructor for PduSlist class.
+      * @param inputStream were the info to create the pdu comes from.
+      * @throws IOException if the inputStream operation is
+      * interrupted/fails.
+      */
     public PduSlist(InputStream inputStream) throws IOException {
 
         byte[] byteArray;
@@ -76,7 +88,7 @@ public class PduSlist extends Pdu {
                     byte testByte = (byte)inputStream.read();
                     if(testByte != 0){
                         throw new IllegalArgumentException("The format " +
-                                "of the PDU is wrong.");
+                                "of the PDU is wrong. Please exit program.");
                     }
                     sequenceBuilder.append(testByte);
                 }

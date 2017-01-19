@@ -1,8 +1,14 @@
 package Pdu;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Class that represents a corrupt pdu.
- * Created by kristoffer and Viyan on 2017-01-17.
  */
 public class PduCorrupt extends Pdu {
 
@@ -12,7 +18,7 @@ public class PduCorrupt extends Pdu {
      * Method that prints info for the user.
      */
     public void printInfo(){
-        System.out.println("a corrupt PDU has been received. \n " +
+        System.out.println("a corrupt PDU has been received. \n" +
                 "Exiting application.");
     }
 }

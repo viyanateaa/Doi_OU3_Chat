@@ -6,10 +6,15 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+/**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
 
 /**
  * Class that represents a Message Pdu.
- * Created by kristoffer & Viyan on 2016-09-28.
  */
 public class PduMess extends Pdu {
 
@@ -61,9 +66,9 @@ public class PduMess extends Pdu {
     }
 
     /**
-     * The consturctor for a recived PduMess
-     * @param inputStream were the PduMess is recieved from
-     * @throws IOException if unable to read from the inputStream
+     * The constructor for a received PduMess.
+     * @param inputStream were the PduMess is received from
+     * @throws IOException if unable to read from the inputStream.
      */
     public PduMess(InputStream inputStream) throws IOException {
         byte[] byteArray;
@@ -100,7 +105,7 @@ public class PduMess extends Pdu {
         byteArray[1] = (byte)inputStream.read();
         if (byteArray[0] != 0 || byteArray[1] != 0){
             throw new IllegalArgumentException("the padding of the " +
-                    "Pdu is wrong. Message corrupted!");
+                    "Pdu is wrong. Message corrupted! Please exit program.");
         }
         sequenceBuilder.append(byteArray);
 
@@ -124,7 +129,8 @@ public class PduMess extends Pdu {
                 byteArray[0] = (byte)inputStream.read();
                 if(byteArray[0] != 0){
                     throw new IllegalArgumentException("the padding" +
-                            " of the Pdu is wrong. Message corrupted!");
+                            " of the Pdu is wrong. Message " +
+                            "corrupted! Please exit program.");
                 }
                 sequenceBuilder.append(byteArray);
             }
@@ -143,7 +149,8 @@ public class PduMess extends Pdu {
                 byteArray[0] = (byte)inputStream.read();
                 if(byteArray[0] != 0){
                     throw new IllegalArgumentException("the padding" +
-                            " of the Pdu is wrong. Message corrupted!");
+                            " of the Pdu is wrong. Message " +
+                            "corrupted! Please exit program.");
                 }
                 sequenceBuilder.append(byteArray);
             }
@@ -160,7 +167,7 @@ public class PduMess extends Pdu {
         int test = Checksum.computeChecksum(bytes);
         if(test != 0){
             throw new IllegalArgumentException("The checksum is not" +
-                    " correct. message corrupt!");
+                    " correct. message corrupt! Please exit program.");
         }
     }
     /**

@@ -13,7 +13,10 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 //comment%%
 /**
- * Created by viyanateaa on 2016-11-30.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
  */
 public class MessPDU_Junittest {
 

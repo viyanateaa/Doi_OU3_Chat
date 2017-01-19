@@ -35,6 +35,13 @@
  */
 package Pdu;
 
+/**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
 public class Checksum {
 
     /**

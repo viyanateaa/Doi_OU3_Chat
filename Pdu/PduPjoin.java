@@ -7,6 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Class that represents a Pjoin Pdu.
  */
 public class PduPjoin extends Pdu{
@@ -14,7 +21,13 @@ public class PduPjoin extends Pdu{
     private String clientIdentity;
     private Date timeStamp;
 
-
+    /**
+     * Constructor for PduPjoin.
+     * @param inputStream were the bytes to construct the pdu comes
+     *                    from.
+     * @throws IOException if the inputSteam operation is
+     * interrupted/failed.
+     */
     public PduPjoin(InputStream inputStream) throws IOException {
 
         byte identityLenght = (byte)inputStream.read();
@@ -23,7 +36,7 @@ public class PduPjoin extends Pdu{
         for(int i= 0;i < 2;i++) {
             if (inputStream.read() != (byte)0) {
                 throw new IllegalArgumentException("the format of " +
-                        "the PDU is wrong.");
+                        "the PDU is wrong. Please exit program.");
             }
         }
 
@@ -47,7 +60,7 @@ public class PduPjoin extends Pdu{
             for(int i = 0;i < (4 - (identityLenght%4));i++){
                 if(inputStream.read() != 0){
                     throw new IllegalArgumentException("The format " +
-                            "of the PDU is wrong.");
+                            "of the PDU is wrong. Please exit program.");
                 }
             }
         }
@@ -60,8 +73,6 @@ public class PduPjoin extends Pdu{
         System.out.println(timeStamp);
         System.out.println(clientIdentity + " has joined the chat.");
     }
-
-
 
     public String getClientIdentity() {
         return clientIdentity;

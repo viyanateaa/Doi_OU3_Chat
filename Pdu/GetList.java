@@ -5,6 +5,12 @@
  * Created by kristoffer on 2016-09-28.
  */
 package Pdu;
+/**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
 
 /**
  * Class that represents Getlist Pdu.

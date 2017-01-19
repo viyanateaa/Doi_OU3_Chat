@@ -8,8 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Class that represents a Participants Pdu.
- * Created by kristoffer & Viyan on 2016-12-26.
  */
 
 public class PduParticipants extends Pdu{
@@ -42,9 +48,16 @@ public class PduParticipants extends Pdu{
         int offset = 0;
         for(int i = 0;i < lenghtOfParticipants;i++){
             if(byteArray[i] == 0){
-                participantsList.add(new String(Arrays.copyOfRange
-                        (byteArray,offset,i),StandardCharsets.UTF_8));
-                offset = i + 1;
+                //checks so names are null terminated only once.
+                if((i - offset) > 0){
+                    participantsList.add(new String(Arrays.copyOfRange
+                            (byteArray,offset,i),StandardCharsets.UTF_8));
+                    offset = i + 1;
+                }else {
+                    throw new IllegalArgumentException("the pdu is " +
+                            "corrupt! Please exit program.");
+                }
+
             }
         }
         sequenceBuilder.append(byteArray);
@@ -56,7 +69,7 @@ public class PduParticipants extends Pdu{
                 if (testByte != (byte)0) {
                     throw new IllegalArgumentException("The format " +
                             "for PduParticipants is wrong! corrupt " +
-                            "PDU");
+                            "PDU. Please exit program.");
                 }
                 sequenceBuilder.append(testByte);
             }
@@ -79,9 +92,5 @@ public class PduParticipants extends Pdu{
 
     public List<String> getParticipantsList() {
         return participantsList;
-    }
-
-    public int getNrOfClients() {
-        return nrOfClients;
     }
 }

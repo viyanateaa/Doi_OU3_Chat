@@ -1,6 +1,6 @@
 package test;
 
-import Pdu.PDUOutputStream;
+import Pdu.PduOutputStream;
 import Pdu.PduMess;
 import org.junit.Test;
 
@@ -12,7 +12,10 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by viyanateaa on 2017-01-17.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
  */
 public class OutputStreamPDU_JunitTest {
 
@@ -25,7 +28,7 @@ public class OutputStreamPDU_JunitTest {
 
         ByteArrayOutputStream test_pdu_out = new ByteArrayOutputStream(36);
         OutputStream out = test_pdu_out;
-        PDUOutputStream pdu_out = new PDUOutputStream(out);
+        PduOutputStream pdu_out = new PduOutputStream(out);
 
         pdu_out.sendPDU(pM);
 

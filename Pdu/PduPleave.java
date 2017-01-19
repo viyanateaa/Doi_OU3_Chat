@@ -10,6 +10,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
  * Class that represents a Pleave Pdu.
  */
 public class PduPleave extends Pdu{
@@ -17,6 +24,12 @@ public class PduPleave extends Pdu{
     private Date timeStamp;
     private String clientIdentity;
 
+    /**
+     * Constructor for PduPleave class.
+     * @param inputStream were the info to create the pdu comes from.
+     * @throws IOException if the inputStream operation is
+     * interrupted/fails.
+     */
     public PduPleave(InputStream inputStream) throws IOException {
         byte identityLenght = (byte)inputStream.read();
 
@@ -24,7 +37,7 @@ public class PduPleave extends Pdu{
         for(int i= 0;i < 2;i++) {
             if (inputStream.read() != (byte)0) {
                 throw new IllegalArgumentException("the format of " +
-                        "the PDU is wrong.");
+                        "the PDU is wrong. Please exit program.");
             }
         }
 
@@ -48,7 +61,7 @@ public class PduPleave extends Pdu{
             for(int i = 0;i < (4 - (identityLenght%4));i++){
                 if(inputStream.read() != 0){
                     throw new IllegalArgumentException("The format " +
-                            "of the PDU is wrong.");
+                            "of the PDU is wrong. Please exit program.");
                 }
             }
         }

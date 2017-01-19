@@ -8,7 +8,15 @@ import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
- * Created by kristoffer on 2017-01-03.
+ * Course: Datakommutikation och internet 5DV167
+ * Assignment: OU3
+ * Written by: Kristoffer & Viyan
+ * Version: 19/1 -17.
+ */
+
+/**
+ * Client class that represents a chat client. Receives and and
+ * sends messages to a chat server or name server.
  */
 public class Client {
 
@@ -21,9 +29,10 @@ public class Client {
     private InetAddress chatIP;
     private LinkedBlockingDeque <Pdu> inQueue;
 
+
     public Client(String[] input)  {
-        //Sets the correct values, an initializes variables for the
-        // client
+        /*Sets the correct values, an initializes variables for the
+         client */
         idString = input[0];
         String serverType = input[1];
 
@@ -115,15 +124,16 @@ public class Client {
     }
 
     /**
-     * Method that connects to nameServer
+     * Method that connects to nameServer, sends a getList and
+     * receives a sList.
      * @throws IOException if socket cannot connect.
      */
     private void connectToNameServer() throws IOException {
 
         socket = new Socket(ipAddress,port);
-        PDUInputStream inputStream = new PDUInputStream(socket
+        PduInputStream inputStream = new PduInputStream(socket
                 .getInputStream());
-        PDUOutputStream outputStream = new PDUOutputStream(socket
+        PduOutputStream outputStream = new PduOutputStream(socket
                 .getOutputStream());
 
         //send GetList to name server.
@@ -151,9 +161,10 @@ public class Client {
     }
 
     /**
-     * Method that gets the ip and portNr to a chatserver
+     * Method that gets the ip and portNr to a chat server
      * from the user.
-     * @throws UnknownHostException
+     * @throws UnknownHostException if IP address entered is not
+     * correct format.
      */
     private void chooseChatServer() throws UnknownHostException {
         String userInput = "zero";
@@ -172,26 +183,37 @@ public class Client {
         System.out.println("Enter the Ip address for chatserver in " +
                 "format <192.168.0.1>");
         userInput = scanner.nextLine();
-        chatIP = InetAddress.getByName(userInput);
+        if(userInput.equals("quit")){
+            System.out.println("You have choosen to exit the " +
+                    "application, goodbye.");
+            System.exit(0);
+        }else{
+            chatIP = InetAddress.getByName(userInput);
+        }
 
         //gets the port-nr entered by user
         System.out.println("Enter the port number for the " +
                 "chatserver: ");
         userInput = scanner.nextLine();
-        chatPort = Integer.parseInt(userInput);
+        if(userInput.equals("quit")){
+            System.out.println("You have choosen to exit the " +
+                    "application, goodbye.");
+            System.exit(0);
+        }else{
+            chatPort = Integer.parseInt(userInput);
+        }
     }
 
     /**
-     * Method that handles the output of the ChatClient
+     * Method that handles the output of the ChatClient, uses a thread.
      * @param socket that the client will send pdu to.
      */
     private void chatOutput(Socket socket){
 
-        Scanner userInputScanner = new Scanner(System.in);
         Thread outputThread = new Thread(){
             public void run(){
                 try {
-                    PDUOutputStream outputStream = new PDUOutputStream(socket
+                    PduOutputStream outputStream = new PduOutputStream(socket
                             .getOutputStream());
                     PduJoin joinRequest = new PduJoin(idString);
                     outputStream.sendPDU(joinRequest);
@@ -223,7 +245,7 @@ public class Client {
     }
 
     /**
-     * Method that handles the input of the ChatClient
+     * Method that handles the input of the ChatClient, uses a thread.
      * @param socket that the client will receive pdu from.
      */
     private void chatInput(Socket socket){
@@ -232,7 +254,7 @@ public class Client {
 
             public void run(){
                 try {
-                    PDUInputStream inputStream = new PDUInputStream
+                    PduInputStream inputStream = new PduInputStream
                             (socket.getInputStream());
                     boolean receiving = true;
                     Pdu receivedPdu;
@@ -259,7 +281,7 @@ public class Client {
     }
 
     /**
-     * Method that prints the info from the recieved pdu to the user
+     * Method that prints the info from the received pdu to the user.
      */
     private void chatPrint(){
 
@@ -274,7 +296,7 @@ public class Client {
                             PduToPrint.getClass().equals(PduCorrupt.class)){
                         PduToPrint.printInfo();
                         chatRunning = false;
-                        System.exit(-1);
+                        System.exit(0);
                     }
                     PduToPrint.printInfo();
                 } catch (InterruptedException e) {
